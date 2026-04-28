@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Tanaman — Botanical Curator</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0B100D; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body>
-<div class="app-wrapper">
+<body class="text-gray-300">
 
+<div class="flex min-h-screen overflow-hidden">
     @include('components.sidebar')
 
-    <div class="main-area">
-
+    <div class="flex-1 flex flex-col h-screen overflow-y-auto no-scrollbar">
         @include('components.navbar', [
             'section'   => 'Tanaman',
             'pageTitle' => 'Detail Tanaman',
         ])
 
-        <main class="content">
-
+        <main class="p-8 space-y-8">
             @php
-            // Dummy data — in real app, this comes from controller
             $tanaman = [
                 'id'          => 1,
                 'nama'        => 'Monstera Deliciosa',
@@ -32,18 +35,18 @@
                 'tinggi'      => '120 cm',
                 'umur'        => '2 tahun',
                 'terakhir'    => '2 hari lalu',
-                'jadwal'      => 'Setiap 3 hari',
+                'jadwal'      => '3 hari',
                 'cahaya'      => 'Indirect Bright',
                 'suhu'        => '18–27°C',
                 'kelembaban'  => '60–80%',
                 'media_tanam' => 'Perlite + Potting Mix',
-                'pupuk'       => 'Setiap 2 minggu (Musim Tumbuh)',
-                'deskripsi'   => 'Monstera Deliciosa, dikenal sebagai "Swiss Cheese Plant", adalah tanaman tropis ikonik dari keluarga Araceae. Daun berlubangnya yang unik merupakan adaptasi alami terhadap angin kencang di habitat aslinya di hutan hujan tropis Amerika Tengah. Tanaman ini tumbuh baik di cahaya tidak langsung yang terang, menjadikannya pilihan sempurna untuk interior ruangan modern.',
+                'pupuk'       => 'Setiap 2 minggu',
+                'deskripsi'   => 'Monstera Deliciosa, dikenal sebagai "Swiss Cheese Plant", adalah tanaman tropis ikonik. Daun berlubangnya yang unik merupakan adaptasi alami terhadap angin kencang di habitat aslinya di hutan hujan tropis Amerika Tengah.',
                 'tips'        => [
-                    'Siram ketika 2–3 inci lapisan atas tanah terasa kering',
-                    'Lap daun dengan kain lembab untuk menghilangkan debu',
-                    'Berikan penopang seperti moss pole agar tumbuh tegak',
-                    'Hindari paparan sinar matahari langsung yang dapat membakar daun',
+                    'Siram ketika 2–3 inci lapisan atas tanah kering',
+                    'Lap daun dengan kain lembab dari debu',
+                    'Berikan penopang moss pole agar tegak',
+                    'Hindari paparan sinar matahari langsung',
                 ],
                 'laporan' => [
                     ['tanggal'=>'14 Okt 2024', 'aksi'=>'Penyiraman',  'catatan'=>'Kondisi baik, daun segar'],
@@ -53,180 +56,137 @@
             ];
             @endphp
 
-            {{-- Breadcrumb --}}
-            <div class="breadcrumb">
-                <a href="{{ route('dashboard') }}">Dashboard</a>
-                <span class="sep">›</span>
-                <a href="{{ route('tanaman.index') }}">Tanaman</a>
-                <span class="sep">›</span>
-                <span class="current">{{ $tanaman['nama'] }}</span>
-            </div>
+            <nav class="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                <a href="#" class="hover:text-emerald-500 transition-colors">Dashboard</a>
+                <span>/</span>
+                <a href="#" class="hover:text-emerald-500 transition-colors">Tanaman</a>
+                <span>/</span>
+                <span class="text-emerald-500">{{ $tanaman['nama'] }}</span>
+            </nav>
 
-            {{-- Hero Section --}}
-            <div class="plant-detail-header">
-
-                {{-- Plant Image --}}
-                <div class="plant-detail-img">
-                    <span>{{ $tanaman['emoji'] }}</span>
-                    <span class="plant-status-badge status-{{ $tanaman['status'] }}" style="position:absolute;top:16px;right:16px;">
-                        ✓ {{ ucfirst($tanaman['status']) }}
-                    </span>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1">
+                    <div class="relative aspect-square rounded-[3rem] bg-[#121A16] border border-white/5 flex items-center justify-center text-[10rem] shadow-2xl overflow-hidden group">
+                        <span class="group-hover:scale-110 transition-transform duration-700">{{ $tanaman['emoji'] }}</span>
+                        <div class="absolute top-8 right-8">
+                            <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 backdrop-blur-md">
+                                ✓ {{ $tanaman['status'] }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- Plant Info --}}
-                <div class="plant-detail-info">
+                <div class="lg:col-span-2 space-y-8">
                     <div>
-                        <div class="detail-name">{{ $tanaman['nama'] }}</div>
-                        <div class="detail-species">{{ $tanaman['spesies'] }}</div>
+                        <h1 class="text-5xl font-serif text-white tracking-tight">{{ $tanaman['nama'] }}</h1>
+                        <p class="text-emerald-500 font-medium mt-2 italic">{{ $tanaman['spesies'] }}</p>
+                        <p class="text-gray-400 mt-6 leading-relaxed max-w-2xl italic">"{{ $tanaman['deskripsi'] }}"</p>
                     </div>
 
-                    <p class="detail-description">{{ $tanaman['deskripsi'] }}</p>
-
-                    {{-- Care Overview --}}
-                    <div class="care-grid">
-                        <div class="care-item">
-                            <div class="care-icon">💧</div>
-                            <div class="care-label">Jadwal Air</div>
-                            <div class="care-value">{{ $tanaman['jadwal'] }}</div>
-                        </div>
-                        <div class="care-item">
-                            <div class="care-icon">☀️</div>
-                            <div class="care-label">Cahaya</div>
-                            <div class="care-value">{{ $tanaman['cahaya'] }}</div>
-                        </div>
-                        <div class="care-item">
-                            <div class="care-icon">🌡️</div>
-                            <div class="care-label">Suhu</div>
-                            <div class="care-value">{{ $tanaman['suhu'] }}</div>
-                        </div>
-                        <div class="care-item">
-                            <div class="care-icon">💦</div>
-                            <div class="care-label">Kelembaban</div>
-                            <div class="care-value">{{ $tanaman['kelembaban'] }}</div>
-                        </div>
-                        <div class="care-item">
-                            <div class="care-icon">📏</div>
-                            <div class="care-label">Tinggi</div>
-                            <div class="care-value">{{ $tanaman['tinggi'] }}</div>
-                        </div>
-                        <div class="care-item">
-                            <div class="care-icon">🕐</div>
-                            <div class="care-label">Umur</div>
-                            <div class="care-value">{{ $tanaman['umur'] }}</div>
-                        </div>
-                    </div>
-
-                    {{-- Quick Actions --}}
-                    <div class="quick-actions">
-                        <a href="#" class="btn btn-primary">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            Jadwal Perawatan
-                        </a>
-                        <a href="#" class="btn btn-ghost">
-                            💡 Growth Tips
-                        </a>
-                        <a href="{{ route('laporan.index') }}" class="btn btn-outline">
-                            📋 Lihat Laporan
-                        </a>
-                        <a href="#" class="btn btn-outline" style="color:#e85d5d;border-color:rgba(232,93,93,.25);">
-                            ✏️ Edit
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-
-            {{-- Detail Two-Col --}}
-            <div class="two-col">
-
-                {{-- Tips & Notes --}}
-                <div style="display:flex;flex-direction:column;gap:20px;">
-
-                    {{-- Care Tips --}}
-                    <div class="card">
-                        <div class="card-title">🌱 Tips Perawatan</div>
-                        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;margin-top:12px;">
-                            @foreach($tanaman['tips'] as $tip)
-                            <li style="display:flex;gap:10px;align-items:flex-start;">
-                                <span style="color:var(--accent);font-size:1rem;margin-top:1px;">✦</span>
-                                <span style="font-size:.88rem;color:var(--text-muted);line-height:1.6;">{{ $tip }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    {{-- Media Tanam --}}
-                    <div class="card">
-                        <div class="card-title">🪨 Media Tanam & Nutrisi</div>
-                        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                            <div>
-                                <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px;">Media Tanam</div>
-                                <div style="font-size:.9rem;font-weight:600;">{{ $tanaman['media_tanam'] }}</div>
-                            </div>
-                            <div>
-                                <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px;">Pupuk</div>
-                                <div style="font-size:.9rem;font-weight:600;">{{ $tanaman['pupuk'] }}</div>
-                            </div>
-                        </div>
-
-                        {{-- Health Progress --}}
-                        <div style="margin-top:18px;">
-                            <div class="flex-between mb-8">
-                                <span style="font-size:.8rem;color:var(--text-muted);">Kesehatan Keseluruhan</span>
-                                <span style="font-size:.8rem;font-weight:600;color:var(--accent);">87%</span>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-fill" style="width:87%"></div>
-                            </div>
-                        </div>
-                        <div style="margin-top:12px;">
-                            <div class="flex-between mb-8">
-                                <span style="font-size:.8rem;color:var(--text-muted);">Kelembaban Tanah</span>
-                                <span style="font-size:.8rem;font-weight:600;color:var(--accent);">62%</span>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-fill" style="width:62%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- Recent Log --}}
-                <div>
-                    <div class="card">
-                        <div class="card-title">📝 Log Perawatan Terbaru</div>
-                        <div style="margin-top:12px;display:flex;flex-direction:column;gap:0;">
-                            @foreach($tanaman['laporan'] as $l)
-                            <div class="schedule-item">
-                                <div style="flex:1;">
-                                    <div style="font-weight:600;font-size:.9rem;margin-bottom:3px;">{{ $l['aksi'] }}</div>
-                                    <div style="font-size:.78rem;color:var(--text-muted);">{{ $l['catatan'] }}</div>
-                                    <div style="font-size:.72rem;color:var(--text-muted);margin-top:4px;opacity:.7;">{{ $l['tanggal'] }}</div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        @foreach([
+                            ['💧','Jadwal Air', $tanaman['jadwal']],
+                            ['☀️','Cahaya', $tanaman['cahaya']],
+                            ['🌡️','Suhu', $tanaman['suhu']],
+                            ['💦','Lembab', $tanaman['kelembaban']],
+                            ['📏','Tinggi', $tanaman['tinggi']],
+                            ['🕐','Umur', $tanaman['umur']]
+                        ] as $care)
+                        <div class="bg-[#121A16] p-4 rounded-2xl border border-white/5">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">{{ $care[0] }}</span>
+                                <div>
+                                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{{ $care[1] }}</p>
+                                    <p class="text-xs font-semibold text-white">{{ $care[2] }}</p>
                                 </div>
                             </div>
-                            @endforeach
                         </div>
-                        <a href="{{ route('laporan.index') }}" class="btn btn-outline btn-sm" style="width:100%;justify-content:center;margin-top:12px;">
-                            Lihat Semua Laporan →
-                        </a>
+                        @endforeach
                     </div>
 
-                    {{-- Location Card --}}
-                    <div class="card" style="margin-top:18px;">
-                        <div class="card-title">📍 Lokasi Tanaman</div>
-                        <div style="margin-top:14px;background:rgba(111,207,151,0.07);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center;">
-                            <div style="font-size:2rem;margin-bottom:8px;">🏠</div>
-                            <div style="font-weight:600;font-size:1rem;">{{ $tanaman['ruangan'] }}</div>
-                            <div style="font-size:.78rem;color:var(--text-muted);margin-top:4px;">Terakhir dipindah: {{ $tanaman['terakhir'] }}</div>
+                    <div class="flex flex-wrap gap-3 pt-4">
+                        <button class="px-6 py-3 bg-emerald-600 text-[#0B100D] rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-emerald-500 transition-all">Jadwal Perawatan</button>
+                        <button class="px-6 py-3 bg-white/5 border border-white/10 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all">Growth Tips</button>
+                        <button class="px-6 py-3 bg-white/5 border border-white/10 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all">Edit Data</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="bg-[#121A16] p-8 rounded-[2.5rem] border border-white/5">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="text-emerald-500 text-lg">✦</span> Tips Perawatan
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            @foreach($tanaman['tips'] as $tip)
+                            <div class="flex gap-4 items-start p-4 bg-white/[0.02] rounded-2xl border border-white/5">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></div>
+                                <p class="text-xs text-gray-400 leading-relaxed">{{ $tip }}</p>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="bg-[#121A16] p-8 rounded-[2.5rem] border border-white/5">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-6">📝 Log Perawatan Terbaru</h3>
+                        <div class="space-y-4">
+                            @foreach($tanaman['laporan'] as $l)
+                            <div class="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 group hover:border-emerald-500/30 transition-all">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 text-xs font-bold">
+                                        {{ substr($l['aksi'], 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-white">{{ $l['aksi'] }}</p>
+                                        <p class="text-[10px] text-gray-500">{{ $l['catatan'] }}</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-bold text-gray-600 uppercase">{{ $l['tanggal'] }}</span>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
 
-            </div>
+                <div class="space-y-8">
+                    <div class="bg-[#121A16] p-8 rounded-[2.5rem] border border-white/5 space-y-6">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-widest">Kondisi Real-time</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold uppercase mb-2">
+                                    <span class="text-gray-500">Kesehatan</span>
+                                    <span class="text-emerald-500">87%</span>
+                                </div>
+                                <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 rounded-full" style="width: 87%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold uppercase mb-2">
+                                    <span class="text-gray-500">Kelembaban Tanah</span>
+                                    <span class="text-blue-400">62%</span>
+                                </div>
+                                <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blue-400 rounded-full" style="width: 62%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="bg-[#121A16] p-8 rounded-[2.5rem] border border-white/5">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-6">📍 Lokasi</h3>
+                        <div class="p-6 bg-emerald-500/5 rounded-3xl border border-emerald-500/10 text-center">
+                            <div class="text-4xl mb-3">🏠</div>
+                            <p class="text-lg font-serif text-white">{{ $tanaman['ruangan'] }}</p>
+                            <p class="text-[10px] text-emerald-500/60 font-bold uppercase mt-1">Terakhir pindah: {{ $tanaman['terakhir'] }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </div>
+
 </body>
 </html>
