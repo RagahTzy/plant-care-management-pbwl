@@ -1,112 +1,165 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanaman Saya — Botanical Curator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0B100D; }
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
-</head>
-<body class="text-gray-300">
+@extends('layouts.dashboard')
 
-<div class="flex min-h-screen overflow-hidden">
-    @include('components.sidebar')
+@section('title', 'Manajemen Laporan - Admin')
 
-    <div class="flex-1 flex flex-col h-screen overflow-y-auto no-scrollbar">
-        @include('components.navbar', [
-            'section'   => 'Koleksi',
-            'pageTitle' => 'Tanaman Saya',
-        ])
+@section('content')
+<div class="max-w-6xl mx-auto space-y-6">
+    
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h2 class="text-3xl text-white font-serif font-light tracking-wide">Laporan Perawatan</h2>
+            <p class="text-sm text-gray-400 mt-2">Monitor perkembangan tanaman dan hasil laporan dari user.</p>
+        </div>
+        <button class="bg-botanical-800 hover:bg-botanical-700 text-gray-300 border border-botanical-700 px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Export PDF
+        </button>
+    </div>
 
-        <main class="p-8 space-y-8">
-            @php
-            $tanaman = [
-                ['id'=>1,'nama'=>'Monstera Deliciosa','spesies'=>'Araceae','status'=>'sehat', 'emoji'=>'🌿','ruangan'=>'Living Room','jadwal'=>'3 hari','tinggi'=>'120 cm','terakhir'=>'2 hari lalu'],
-                ['id'=>2,'nama'=>'Sansevieria Trifasciata','spesies'=>'Asparagaceae','status'=>'sehat','emoji'=>'🌵','ruangan'=>'Bedroom','jadwal'=>'7 hari','tinggi'=>'65 cm','terakhir'=>'5 hari lalu'],
-                ['id'=>3,'nama'=>'Ficus Elastica','spesies'=>'Moraceae','status'=>'perlu-air','emoji'=>'🌳','ruangan'=>'Balcony','jadwal'=>'5 hari','tinggi'=>'90 cm','terakhir'=>'8 hari lalu'],
-                ['id'=>4,'nama'=>'Calathea Ornata','spesies'=>'Marantaceae','status'=>'sakit', 'emoji'=>'🪴','ruangan'=>'Studio','jadwal'=>'2 hari','tinggi'=>'45 cm','terakhir'=>'1 hari lalu'],
-                ['id'=>5,'nama'=>'Pothos Aureum','spesies'=>'Araceae','status'=>'sehat', 'emoji'=>'🌱','ruangan'=>'Kitchen','jadwal'=>'4 hari','tinggi'=>'55 cm','terakhir'=>'3 hari lalu'],
-                ['id'=>6,'nama'=>'ZZ Plant','spesies'=>'Zamioculcas','status'=>'sehat', 'emoji'=>'🌾','ruangan'=>'Office','jadwal'=>'10 hari','tinggi'=>'70 cm','terakhir'=>'9 hari lalu'],
-                ['id'=>7,'nama'=>'Peace Lily','spesies'=>'Spathiphyllum','status'=>'perlu-air','emoji'=>'💐','ruangan'=>'Bathroom','jadwal'=>'3 hari','tinggi'=>'50 cm','terakhir'=>'4 hari lalu'],
-                ['id'=>8,'nama'=>'Rubber Plant','spesies'=>'Ficus elastica','status'=>'sehat', 'emoji'=>'🌴','ruangan'=>'Dining Room','jadwal'=>'6 hari','tinggi'=>'110 cm','terakhir'=>'1 hari lalu'],
-            ];
-            @endphp
+    <div class="flex flex-wrap gap-4 mb-6">
+        <div class="relative flex-1 min-w-[250px] max-w-md">
+            <input type="text" placeholder="Cari nama tanaman atau pelapor..." class="w-full bg-botanical-800 text-sm text-gray-300 rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-botanical-accent border border-botanical-700">
+            <svg class="w-4 h-4 absolute left-3.5 top-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <select class="bg-botanical-800 text-sm text-gray-300 rounded-lg px-4 py-2.5 focus:outline-none border border-botanical-700 appearance-none min-w-[150px]">
+            <option>Semua Status</option>
+            <option>Healthy</option>
+            <option>Needs Attention</option>
+        </select>
+        <input type="date" class="bg-botanical-800 text-sm text-gray-300 rounded-lg px-4 py-2.5 focus:outline-none border border-botanical-700 appearance-none cursor-pointer">
+    </div>
 
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div>
-                    <h1 class="text-3xl font-serif text-white tracking-wide">Tanaman Saya</h1>
-                    <p class="text-sm text-gray-500 mt-1">{{ count($tanaman) }} tanaman dalam koleksi Anda</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button class="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 uppercase tracking-widest text-white">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1"/><circle cx="3" cy="12" r="1"/><circle cx="3" cy="18" r="1"/></svg>
-                        List View
-                    </button>
-                    <a href="#" class="px-4 py-2 bg-emerald-600 text-[#0B100D] rounded-xl text-xs font-bold hover:bg-emerald-500 transition-all flex items-center gap-2 uppercase tracking-widest">
-                        <span class="text-lg leading-none">+</span>
-                        Tambah Tanaman
-                    </a>
-                </div>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-                <button class="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-[10px] font-bold uppercase tracking-widest">Semua ({{ count($tanaman) }})</button>
-                <button class="px-4 py-2 bg-white/5 text-gray-400 border border-white/5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:border-emerald-500/50 hover:text-white transition-all text-white">✅ Sehat</button>
-                <button class="px-4 py-2 bg-white/5 text-gray-400 border border-white/5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:border-emerald-500/50 hover:text-white transition-all text-white">💧 Perlu Air</button>
-                <button class="px-4 py-2 bg-white/5 text-gray-400 border border-white/5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:border-emerald-500/50 hover:text-white transition-all text-white">🚨 Sakit</button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                @foreach($tanaman as $t)
-                <a href="#" class="group bg-[#121A16] rounded-[2.5rem] border border-white/5 p-2 transition-all hover:border-emerald-500/30">
-                    <div class="relative h-48 rounded-[2rem] bg-[#1A231F] flex items-center justify-center text-6xl overflow-hidden shadow-inner">
-                        <span class="group-hover:scale-110 transition-transform duration-500">{{ $t['emoji'] }}</span>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter backdrop-blur-md 
-                                {{ $t['status']==='sehat' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20' : 
-                                   ($t['status']==='perlu-air' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/20' : 
-                                   'bg-red-500/20 text-red-400 border border-red-500/20') }}">
-                                @if($t['status']==='sehat') ✓ Sehat
-                                @elseif($t['status']==='perlu-air') 💧 Air
-                                @else 🚨 Sakit @endif
-                            </span>
-                        </div>
-                    </div>
+    <div class="bg-botanical-800 rounded-2xl border border-botanical-700/50 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-xs text-gray-400 uppercase tracking-wider border-b border-botanical-700 bg-botanical-900/30">
+                        <th class="px-6 py-5 font-medium">Foto</th>
+                        <th class="px-6 py-5 font-medium">Tanaman</th>
+                        <th class="px-6 py-5 font-medium">Pelapor</th>
+                        <th class="px-6 py-5 font-medium">Catatan Kondisi</th>
+                        <th class="px-6 py-5 font-medium">Status</th>
+                        <th class="px-6 py-5 font-medium text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-botanical-700">
                     
-                    <div class="p-5">
-                        <h3 class="text-white font-semibold text-lg leading-tight">{{ $t['nama'] }}</h3>
-                        <p class="text-xs text-emerald-500/60 font-medium italic mt-1">{{ $t['spesies'] }}</p>
-                        
-                        <div class="flex gap-4 mt-4">
-                            <div class="flex flex-col">
-                                <span class="text-[9px] text-gray-600 font-bold uppercase tracking-widest">Lokasi</span>
-                                <span class="text-[11px] text-gray-300">{{ $t['ruangan'] }}</span>
+                    <tr class="hover:bg-botanical-700/30 transition group">
+                        <td class="px-6 py-4">
+                            <div class="w-14 h-14 rounded-lg overflow-hidden border border-botanical-700 bg-botanical-900">
+                                <img src="https://images.unsplash.com/photo-1614594975525-e45190c55d40?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Plant photo" class="w-full h-full object-cover">
                             </div>
-                            <div class="flex flex-col">
-                                <span class="text-[9px] text-gray-600 font-bold uppercase tracking-widest">Tinggi</span>
-                                <span class="text-[11px] text-gray-300">{{ $t['tinggi'] }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-white font-medium">Monstera Deliciosa</p>
+                            <p class="text-xs text-gray-500 mt-1">Dilaporkan: Hari ini, 09:30</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="https://i.pravatar.cc/150?img=33" alt="Avatar" class="w-6 h-6 rounded-full border border-botanical-700">
+                                <span class="text-gray-300">Julian S.</span>
                             </div>
-                        </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-gray-400 max-w-xs truncate" title="Penyiraman dilakukan sesuai jadwal. Muncul 1 tunas daun baru, warna hijau cerah.">
+                                "Penyiraman dilakukan sesuai jadwal. Muncul 1 tunas daun..."
+                            </p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Healthy
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="inline-flex items-center text-xs font-medium text-botanical-accent hover:text-emerald-300 transition px-3 py-1.5 rounded-lg border border-botanical-accent/20 bg-botanical-accent/10 hover:bg-botanical-accent/20">
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
 
-                        <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                            <div class="flex items-center gap-2 text-blue-400/80">
-                                <span class="text-xs">💧</span>
-                                <span class="text-[10px] font-bold uppercase tracking-tighter">{{ $t['jadwal'] }}</span>
+                    <tr class="hover:bg-botanical-700/30 transition group">
+                        <td class="px-6 py-4">
+                            <div class="w-14 h-14 rounded-lg overflow-hidden border border-botanical-700 bg-botanical-900 flex items-center justify-center text-gray-500">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
-                            <span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest group-hover:mr-2 transition-all">Detail →</span>
-                        </div>
-                    </div>
-                </a>
-                @endforeach
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-white font-medium">Calathea Orbifolia</p>
+                            <p class="text-xs text-gray-500 mt-1">Dilaporkan: Kemarin, 14:15</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="w-6 h-6 rounded-full border border-botanical-700">
+                                <span class="text-gray-300">Dr. Thorne</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-gray-400 max-w-xs truncate" title="Ujung daun mulai menguning dan kering. Kelembaban udara sepertinya kurang.">
+                                "Ujung daun mulai menguning dan kering. Kelembaban..."
+                            </p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-red-500/10 text-red-400 border border-red-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> Issue
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="inline-flex items-center text-xs font-medium text-botanical-accent hover:text-emerald-300 transition px-3 py-1.5 rounded-lg border border-botanical-accent/20 bg-botanical-accent/10 hover:bg-botanical-accent/20">
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr class="hover:bg-botanical-700/30 transition group">
+                        <td class="px-6 py-4">
+                            <div class="w-14 h-14 rounded-lg overflow-hidden border border-botanical-700 bg-botanical-900">
+                                <img src="https://images.unsplash.com/photo-1597055974418-19614457db2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Plant photo" class="w-full h-full object-cover">
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-white font-medium">Ficus Lyrata</p>
+                            <p class="text-xs text-gray-500 mt-1">Dilaporkan: 24 Okt 2023</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full border border-botanical-700 bg-botanical-900 flex items-center justify-center text-gray-400 font-medium text-[10px]">AC</div>
+                                <span class="text-gray-300">Arthur C.</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-gray-400 max-w-xs truncate" title="Pemupukan bulan ini sudah dilakukan. Tanaman tampak stabil.">
+                                "Pemupukan bulan ini sudah dilakukan. Tanaman tampak..."
+                            </p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Healthy
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="inline-flex items-center text-xs font-medium text-botanical-accent hover:text-emerald-300 transition px-3 py-1.5 rounded-lg border border-botanical-accent/20 bg-botanical-accent/10 hover:bg-botanical-accent/20">
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="p-4 border-t border-botanical-700 flex items-center justify-between text-sm text-gray-400">
+            <div>
+                Menampilkan 1-3 dari 128 laporan
             </div>
-        </main>
+            <div class="flex items-center gap-1">
+                <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-botanical-700 transition">&lsaquo;</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded bg-botanical-700 text-botanical-accent">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-botanical-700 transition">2</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-botanical-700 transition">3</button>
+                <span class="px-2">...</span>
+                <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-botanical-700 transition">&rsaquo;</button>
+            </div>
+        </div>
     </div>
 </div>
-
-</body>
-</html>
+@endsection

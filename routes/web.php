@@ -1,35 +1,49 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+// Halaman Landing Page
 Route::get('/', function () {
     return view('welcome');
-})->name('welcome');
+});
 
-Route::get('/dashboard', function () {
-    return view('dashboard.user'); 
-})->name('dashboard');
+// Route Khusus Admin (Dilindungi middleware auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        // Mencegah user biasa masuk ke dashboard admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+        }
+        // Memanggil file view admin yang sudah kita buat sebelumnya
+        return view('dashboard.admin'); 
+    })->name('admin.dashboard');
+    
+    // Nanti kamu bisa tambahkan route CRUD Admin lainnya di sini
+});
 
-Route::get('/tanaman', function () {
-    return view('tanaman.index'); 
-})->name('tanaman.index');
+// Route Khusus User Biasa (Dilindungi middleware auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/dashboard', function () {
+        // Mencegah admin nyasar ke dashboard user
+        if (auth()->user()->role !== 'user') {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+        }
 
-Route::get('/tanaman/{id}', function ($id) {
-    return view('tanaman.show', ['id' => $id]); 
-})->name('tanaman.show');
+        // Karena kamu belum kasih tau view dashboard user-nya apa, 
+        // pastikan path ini sesuai dengan file blade dashboard user kamu ya!
+        return view('user.index'); 
+    })->name('user.dashboard');
+    
+    // Nanti kamu bisa tambahkan route fitur User lainnya di sini
+});
 
-Route::get('/laporan', function () {
-    return view('laporan.index');
-})->name('laporan.index');
+// Route Profile bawaan Breeze (Biarkan saja untuk fitur bawaan, atau modif ke view profil kita nanti)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-Route::get('/schedule', function () {
-    return view('schedule.index'); 
-})->name('schedule.index');
-
-Route::get('/login', function () {
-    return "Halaman Login Sementara";
-})->name('login');
-
-Route::get('/register', function () {
-    return "Halaman Register Sementara";
-})->name('register');
+// Wajib ada untuk memanggil route Auth dari Breeze (login, register, dll)
+require __DIR__.'/auth.php';
