@@ -1,12 +1,20 @@
-@props(['title' => null, 'subtitle' => null, 'class' => ''])
-<div {{ $attributes->merge(['class' => 'rounded-[28px] border border-white/10 bg-[#122d1f] p-6 shadow-[0_30px_50px_rgba(0,0,0,0.25)] ' . $class]) }}>
-    @if ($title)
-        <div class="mb-4">
-            <h3 class="text-lg font-semibold text-white">{{ $title }}</h3>
-            @if ($subtitle)
-                <p class="text-sm text-[#b8d3ba]">{{ $subtitle }}</p>
-            @endif
+<div class="bg-card rounded-2xl p-6 shadow-lg relative overflow-hidden">
+    
+    <div class="flex justify-between items-start">
+        <div>
+            <p class="text-sm text-gray-400">{{ $title }}</p>
+            <h2 class="text-3xl font-semibold mt-2">{{ $value }}</h2>
         </div>
+
+        @if(isset($badge))
+        <span class="text-xs px-3 py-1 rounded-full bg-secondary text-green-200">
+            {{ $badge }}
+        </span>
+        @endif
+    </div>
+
+    @if(isset($sub))
+    <p class="text-xs text-gray-400 mt-3">{{ $sub }}</p>
     @endif
-    {{ $slot }}
+
 </div>
