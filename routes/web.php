@@ -15,7 +15,6 @@ Route::middleware(['auth'])->group(function () {
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
-        
         // Memanggil file view admin yang sudah kita buat sebelumnya
         return view('dashboard.admin'); 
     })->name('admin.dashboard');
