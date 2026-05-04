@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TipsController;
+use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\LaporanController;
 
 // Halaman Landing Page
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('tips.index');
 });
 
 // Route Khusus Admin (Dilindungi middleware auth)
