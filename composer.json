@@ -12,6 +12,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
@@ -48,8 +49,6 @@
             "@php artisan test"
         ],
         "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
