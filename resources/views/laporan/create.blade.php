@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto space-y-6 pb-12">
     
     <div class="flex items-center gap-4 mb-8">
-        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-botanical-800 border border-botanical-700 text-gray-400 hover:text-white hover:bg-botanical-700 transition">
+        <a href="{{ route('user.dashboard') }}" class="w-10 h-10 flex items-center justify-center rounded-full bg-botanical-800 border border-botanical-700 text-gray-400 hover:text-white hover:bg-botanical-700 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </a>
         <div>
@@ -15,8 +15,8 @@
         </div>
     </div>
 
-    <form action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
-        
+    <form action="{{ route('user.laporan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
         <div class="bg-botanical-800 rounded-2xl p-6 border border-botanical-700/50 space-y-6">
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -74,14 +74,15 @@
         </div>
 
         <div class="flex items-center justify-end gap-4 border-t border-botanical-700 pt-6">
-            <button type="button" class="px-6 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">
+            <a href="{{ route('user.dashboard') }}" class="px-6 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">
                 Batal
-            </button>
+            </a>
             <button type="submit" class="px-6 py-2.5 rounded-lg text-sm font-medium bg-botanical-accent text-botanical-900 hover:bg-emerald-300 shadow-[0_0_15px_rgba(110,231,183,0.3)] transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                 Kirim Laporan
             </button>
         </div>
+        @csrf
     </form>
 </div>
 @endsection

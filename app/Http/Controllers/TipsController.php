@@ -2,77 +2,88 @@
 
 namespace App\Http\Controllers;
 
+// UBAH: Gunakan model Tip (tanpa 's')
+use App\Models\Tip; 
+use App\Models\Tanaman;
 use Illuminate\Http\Request;
-use App\Models\Tip;
 
 class TipsController extends Controller
 {
-    // ✅ LIST TIPS
-    public function index()
+    public function index(Request $request)
     {
-        $tips = Tip::latest()->get();
+        // UBAH: Tips:: menjadi Tip::
+        $query = Tip::with('tanaman.user');
+
+        // Jika user biasa, hanya tampilkan tips untuk tanaman miliknya
+        if (auth()->user()->role !== 'admin') {
+            $query->whereHas('tanaman', function($q) {
+                $q->where('user_id', auth()->id());
+            });
+        }
+
+        // Jika diakses dari tombol "Tips" di detail tanaman tertentu
+        if ($request->has('tanaman_id')) {
+            $query->where('tanaman_id', $request->tanaman_id);
+        }
+
+        $tips = $query->latest()->get();
         return view('tips.index', compact('tips'));
     }
 
-    // ✅ DETAIL TIPS
-    public function show($id)
-    {
-        $tip = Tip::findOrFail($id);
-        return view('tips.show', compact('tip'));
+    public function create() {
+        $tanamans = Tanaman::all();
+        return view('tips.create', compact('tanamans'));
     }
 
-    // ✅ FORM TAMBAH
-    public function create()
-    {
-        return view('tips.create');
-    }
-
-    // ✅ SIMPAN DATA
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required',
-            'deskripsi' => 'required',
+            'tanaman_id' => 'required|exists:tanamans,id',
+            'judul'      => 'required|string|max:255',
+            'deskripsi'  => 'required|string',
         ]);
 
-        Tip::create([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-        ]);
+        // UBAH: Tips:: menjadi Tip::
+        Tip::create($request->all());
 
-        return redirect()->route('tips.index')->with('success', 'Tips berhasil ditambahkan');
+        return redirect()->route('tips.index')->with('success', 'Tips perawatan berhasil ditambahkan!');
     }
 
-    // ✅ FORM EDIT
+    // TAMBAHAN: Fungsi show untuk menampilkan detail tips saat tombol LIHAT ditekan
+    public function show($id)
+    {
+        $tip = Tip::with('tanaman')->findOrFail($id);
+        return view('tips.show', compact('tip'));
+    }
+
     public function edit($id)
     {
+        // UBAH: Tips:: menjadi Tip:: dan jadikan variabel $tip (tunggal) agar cocok dengan view
         $tip = Tip::findOrFail($id);
-        return view('tips.edit', compact('tip'));
+        $tanamans = Tanaman::all();
+        
+        return view('tips.edit', compact('tip', 'tanamans'));
     }
 
-    // ✅ UPDATE DATA
     public function update(Request $request, $id)
     {
         $request->validate([
-            'judul' => 'required',
-            'deskripsi' => 'required',
+            'tanaman_id' => 'required|exists:tanamans,id',
+            'judul'      => 'required|string|max:255',
+            'deskripsi'  => 'required|string',
         ]);
 
         $tip = Tip::findOrFail($id);
-        $tip->update([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-        ]);
+        $tip->update($request->all());
 
-        return redirect()->route('tips.index')->with('success', 'Tips berhasil diupdate');
+        return redirect()->route('tips.index')->with('success', 'Tips perawatan berhasil diperbarui!');
     }
 
-    // ✅ DELETE
     public function destroy($id)
     {
-        $tip = Tip::findOrFail($id);
-        $tip->delete();
-
-        return redirect()->route('tips.index')->with('success', 'Tips berhasil dihapus');
+        // UBAH: Tips:: menjadi Tip::
+        Tip::findOrFail($id)->delete();
+        
+        return redirect()->route('tips.index')->with('success', 'Tips berhasil dihapus!');
     }
 }

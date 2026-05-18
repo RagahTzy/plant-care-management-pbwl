@@ -2,91 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Jadwal;
+use App\Models\Tanaman;
+use Illuminate\Http\Request;
 
 class JadwalController extends Controller
 {
-    // ✅ LIST JADWAL + FILTER TANGGAL
     public function index(Request $request)
     {
-        $query = Jadwal::query();
+        // Mulai query dasar
+        $query = Jadwal::with('tanaman.user');
 
-        // filter tanggal (opsional dari UI nanti)
-        if ($request->tanggal) {
-            $query->whereDate('tanggal', $request->tanggal);
+        // Jika yang login BUKAN admin, batasi hanya jadwal untuk tanamannya saja
+        if (auth()->user()->role !== 'admin') {
+            $query->whereHas('tanaman', function($q) {
+                $q->where('user_id', auth()->id());
+            });
         }
 
+        // FITUR FILTER: Jika URL memiliki ?tanaman_id=... (ditekan dari halaman tanaman)
+        if ($request->has('tanaman_id')) {
+            $query->where('tanaman_id', $request->tanaman_id);
+        }
+
+        // Ambil data terbaru
         $jadwals = $query->latest()->get();
 
         return view('jadwal.index', compact('jadwals'));
     }
 
-    // ✅ FORM TAMBAH
     public function create()
     {
-        return view('jadwal.create');
+        // Admin bisa memilih dari semua tanaman yang ada
+        $tanamans = Tanaman::with('user')->get();
+        return view('jadwal.create', compact('tanamans'));
     }
 
-    // ✅ SIMPAN DATA
     public function store(Request $request)
     {
         $request->validate([
-            'tanggal' => 'required|date',
-            'aktivitas' => 'required|string|max:255',
+            'tanaman_id' => 'required|exists:tanamans,id',
+            'aktivitas'  => 'required|string|max:255',
+            'tanggal'    => 'required|date',
         ]);
 
         Jadwal::create([
-            'tanggal' => $request->tanggal,
-            'aktivitas' => $request->aktivitas,
-            'status' => 'belum',
+            'tanaman_id' => $request->tanaman_id,
+            'aktivitas'  => $request->aktivitas,
+            'tanggal'    => $request->tanggal,
+            'status'     => 'pending'
         ]);
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
     }
 
-    // ✅ FORM EDIT
     public function edit($id)
     {
         $jadwal = Jadwal::findOrFail($id);
-        return view('jadwal.edit', compact('jadwal'));
+        $tanamans = Tanaman::all();
+        return view('jadwal.edit', compact('jadwal', 'tanamans'));
     }
 
-    // ✅ UPDATE
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'aktivitas' => 'required|string|max:255',
-        ]);
-
         $jadwal = Jadwal::findOrFail($id);
-        $jadwal->update([
-            'tanggal' => $request->tanggal,
-            'aktivitas' => $request->aktivitas,
-        ]);
+        $jadwal->update($request->all());
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal diperbarui!');
     }
 
-    // ✅ TANDAI SELESAI (INI PENTING BANGET 🔥)
-    public function selesai($id)
-    {
-        $jadwal = Jadwal::findOrFail($id);
-
-        $jadwal->update([
-            'status' => 'selesai'
-        ]);
-
-        return redirect()->back()->with('success', 'Jadwal selesai');
-    }
-
-    // ✅ DELETE
     public function destroy($id)
     {
-        $jadwal = Jadwal::findOrFail($id);
-        $jadwal->delete();
+        Jadwal::findOrFail($id)->delete();
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal dihapus!');
+    }
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus');
+    public function markAsDone($id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        $jadwal->update(['status' => 'selesai']);
+        return back()->with('success', 'Tugas selesai!');
     }
 }

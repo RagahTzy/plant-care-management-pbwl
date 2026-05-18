@@ -51,7 +51,9 @@
 
         <div class="lg:col-span-2 space-y-6">
             
-            <form action="#" method="POST" class="space-y-6">
+            <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
+                @csrf
+                @method('PATCH')
                 <div class="bg-botanical-800 rounded-2xl p-6 border border-botanical-700/50 space-y-6">
                     <h3 class="text-lg text-white font-medium border-b border-botanical-700 pb-3">Informasi Personal</h3>
                     
