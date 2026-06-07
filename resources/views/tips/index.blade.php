@@ -11,7 +11,7 @@
         </div>
         
         @if(auth()->user()->role === 'admin')
-            <a href="{{ route('tips.create') }}" class="bg-emerald-500 text-black px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-400 transition shadow-[0_10px_20px_rgba(16,185,129,0.2)]">
+            <a href="{{ route('admin.tips.create') }}" class="bg-emerald-500 text-black px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-400 transition shadow-[0_10px_20px_rgba(16,185,129,0.2)]">
                 + TAMBAH TIPS
             </a>
         @endif
@@ -41,7 +41,11 @@
                     <td class="px-6 py-4 text-right space-x-2">
                         <a href="{{ route('tips.show', $t->id) }}" class="text-emerald-500 hover:text-white transition text-xs font-bold">LIHAT</a>
                         @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('tips.edit', $t->id) }}" class="text-yellow-500 hover:text-white transition text-xs font-bold">EDIT</a>
+                            <a href="{{ route('admin.tips.edit', $t->id) }}" class="text-yellow-500 hover:text-white transition text-xs font-bold">EDIT</a>
+                            <form action="{{ route('admin.tips.destroy', $t->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus tips?')">
+                                @csrf @method('DELETE')
+                                <button class="text-red-500 hover:text-white transition text-xs font-bold">HAPUS</button>
+                            </form>
                         @endif
                     </td>
                 </tr>

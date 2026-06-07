@@ -11,7 +11,7 @@
         <h2 class="text-3xl text-white font-serif font-light">Tambah Jadwal Baru</h2>
     </div>
 
-    <form action="{{ route('jadwal.store') }}" method="POST" class="bg-botanical-800 p-8 rounded-2xl border border-botanical-700/50 space-y-6">
+    <form action="{{ route('admin.jadwal.store') }}" method="POST" class="bg-botanical-800 p-8 rounded-2xl border border-botanical-700/50 space-y-6">
         @csrf
         <div class="mb-4">
             <label class="block text-gray-400 text-sm mb-2">Pilih Tanaman Spesimen</label>

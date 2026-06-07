@@ -57,21 +57,30 @@
             <div class="space-y-6">
                 <div class="bg-botanical-800 rounded-2xl p-6 border border-botanical-700/50 h-full">
                     <label class="block text-sm font-medium text-gray-400 mb-4">Foto Spesimen</label>
-                    <div class="relative group aspect-square rounded-xl bg-botanical-900 border-2 border-dashed border-botanical-700 flex flex-col items-center justify-center overflow-hidden">
+                    <div id="preview-container" class="relative group aspect-square rounded-xl bg-botanical-900 border-2 border-dashed border-botanical-700 flex flex-col items-center justify-center overflow-hidden">
+                        
+                        <!-- Placeholder (Visible when no image) -->
+                        <div id="placeholder" class="text-center flex flex-col items-center {{ $tanaman->foto ? 'hidden' : '' }}">
+                            <div class="text-4xl mb-2">📸</div>
+                            <span class="text-xs text-gray-500">Belum ada foto</span>
+                        </div>
+
+                        <!-- Preview Image -->
                         @if($tanaman->foto)
-                            <img id="image-preview" src="{{ asset('storage/' . $tanaman->foto) }}" class="w-full h-full object-cover">
+                            <img id="image-preview" src="{{ Storage::disk('supabase')->url($tanaman->foto) }}" class="w-full h-full object-cover">
                         @else
-                            <div id="upload-icon" class="text-4xl mb-2">📸</div>
+                            <img id="image-preview" src="#" class="w-full h-full object-cover hidden">
                         @endif
                         
-                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <!-- Overlay on Hover -->
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center z-10">
                             <label class="cursor-pointer bg-emerald-500 text-black px-4 py-2 rounded-lg font-bold text-xs">
                                 GANTI FOTO
                                 <input type="file" name="foto" class="hidden" onchange="previewFile(this)">
                             </label>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-4 leading-relaxed text-center">Format: JPG, PNG. Max: 2MB.<br>Biarkan kosong jika tidak ingin mengubah foto.</p>
+                    <p class="text-[10px] text-gray-500 mt-4 leading-relaxed text-center">Format: JPG, PNG. Max: 10MB.<br>Klik "Ganti Foto" untuk mengupload gambar baru.</p>
                 </div>
             </div>
         </div>
@@ -91,16 +100,15 @@
     function previewFile(input) {
         const file = input.files[0];
         const preview = document.getElementById('image-preview');
-        const icon = document.getElementById('upload-icon');
+        const placeholder = document.getElementById('placeholder');
         
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                if(preview) {
-                    preview.src = e.target.result;
-                } else {
-                    // Jika sebelumnya tidak ada foto, buat elemen img baru
-                    location.reload(); // Paling aman reload untuk refresh preview logic
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                if (placeholder) {
+                    placeholder.classList.add('hidden');
                 }
             }
             reader.readAsDataURL(file);

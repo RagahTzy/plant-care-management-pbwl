@@ -11,7 +11,7 @@
         <h2 class="text-3xl text-white font-serif font-light">Edit Tips</h2>
     </div>
 
-    <form action="{{ route('tips.update', $tip->id) }}" method="POST" class="bg-botanical-800 p-8 rounded-2xl border border-botanical-700/50 space-y-6">
+    <form action="{{ route('admin.tips.update', $tip->id) }}" method="POST" class="bg-botanical-800 p-8 rounded-2xl border border-botanical-700/50 space-y-6">
         @csrf @method('PUT')
         
         <div>

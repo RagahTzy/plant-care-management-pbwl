@@ -52,7 +52,13 @@ class TipsController extends Controller
     // TAMBAHAN: Fungsi show untuk menampilkan detail tips saat tombol LIHAT ditekan
     public function show($id)
     {
-        $tip = Tip::with('tanaman')->findOrFail($id);
+        $tip = Tip::with('tanaman.user')->findOrFail($id);
+
+        // Security check
+        if (auth()->user()->role !== 'admin' && $tip->tanaman->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki izin untuk melihat tips ini.');
+        }
+
         return view('tips.show', compact('tip'));
     }
 
@@ -60,6 +66,12 @@ class TipsController extends Controller
     {
         // UBAH: Tips:: menjadi Tip:: dan jadikan variabel $tip (tunggal) agar cocok dengan view
         $tip = Tip::findOrFail($id);
+        
+        // Security check
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Hanya admin yang dapat mengedit tips.');
+        }
+
         $tanamans = Tanaman::all();
         
         return view('tips.edit', compact('tip', 'tanamans'));
@@ -67,6 +79,10 @@ class TipsController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'tanaman_id' => 'required|exists:tanamans,id',
             'judul'      => 'required|string|max:255',
@@ -81,6 +97,10 @@ class TipsController extends Controller
 
     public function destroy($id)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
         // UBAH: Tips:: menjadi Tip::
         Tip::findOrFail($id)->delete();
         

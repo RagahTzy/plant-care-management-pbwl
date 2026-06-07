@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto space-y-6 pb-12">
     
     <div class="flex items-center gap-4 mb-8">
-        <a href="{{ auth()->user()->role === 'admin' ? route('admin.laporan.index') : route('user.laporan.create') }}" class="w-10 h-10 flex items-center justify-center rounded-full bg-botanical-800 border border-botanical-700 text-gray-400 hover:text-white hover:bg-botanical-700 transition">
+        <a href="{{ route('laporan.index') }}" class="w-10 h-10 flex items-center justify-center rounded-full bg-botanical-800 border border-botanical-700 text-gray-400 hover:text-white hover:bg-botanical-700 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </a>
         <div>
@@ -28,10 +28,10 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs text-gray-400 uppercase tracking-widest">ID Laporan</p>
-                            <p class="text-lg text-emerald-500 font-mono font-bold mt-1">#{{ $laporan->id ?? 'N/A' }}</p>
+                            <p class="text-lg text-emerald-500 font-mono font-bold mt-1">#REP-{{ str_pad($laporan->id, 3, '0', STR_PAD_LEFT) }}</p>
                         </div>
-                        <span class="text-xs px-3 py-1 rounded-full {{ $laporan->kondisi === 'sehat' ? 'bg-emerald-500/20 text-emerald-400' : ($laporan->kondisi === 'perhatian' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400') }} font-medium">
-                            {{ ucfirst($laporan->kondisi ?? 'N/A') }}
+                        <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-medium">
+                            Recorded
                         </span>
                     </div>
 
@@ -66,10 +66,10 @@
         <div class="space-y-6">
             
             <!-- Foto -->
-            @if($laporan->foto ?? false)
+            @if($laporan->foto)
                 <div class="bg-botanical-800 rounded-2xl p-6 border border-botanical-700/50">
                     <h3 class="text-lg font-semibold text-white mb-4">Foto Dokumentasi</h3>
-                    <img src="{{ $laporan->foto }}" alt="Plant photo" class="w-full rounded-lg border border-botanical-700">
+                    <img src="{{ Storage::disk('supabase')->url($laporan->foto) }}" alt="Plant photo" class="w-full rounded-lg border border-botanical-700">
                 </div>
             @endif
 
@@ -78,8 +78,8 @@
                 <h3 class="text-lg font-semibold text-white mb-4">Status</h3>
                 <div class="space-y-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ $laporan->kondisi === 'sehat' ? 'bg-emerald-500' : ($laporan->kondisi === 'perhatian' ? 'bg-yellow-500' : 'bg-red-500') }}"></div>
-                        <span class="text-sm text-gray-300">{{ ucfirst($laporan->kondisi ?? 'N/A') }}</span>
+                        <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                        <span class="text-sm text-gray-300">Recorded</span>
                     </div>
                     <p class="text-xs text-gray-500 mt-2">Dibuat pada {{ $laporan->created_at->diffForHumans() }}</p>
                 </div>

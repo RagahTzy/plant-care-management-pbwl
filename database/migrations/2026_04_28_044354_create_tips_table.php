@@ -13,6 +13,7 @@ return new class extends Migration
 {
     Schema::create('tips', function (Blueprint $table) {
         $table->id();
+        $table->foreignId('tanaman_id')->constrained('tanamans')->onDelete('cascade');
         $table->string('judul');
         $table->text('deskripsi');
         $table->timestamps();

@@ -9,9 +9,9 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-    <x-card title="Tanaman Aktif" value="32" sub="Lokasi: Konservatori Utama" />
-    <x-card title="Kelembaban Tanah" value="68%" badge="Normal" />
-    <x-card title="Tugas Hari Ini" value="4" sub="Penyiraman & Pemupukan" />
+    <x-card title="Tanaman Aktif" :value="$stats['tanaman_aktif']" sub="Spesimen terdaftar" />
+    <x-card title="Laporan Saya" :value="$stats['laporan_saya']" sub="Riwayat pertumbuhan" />
+    <x-card title="Tugas Hari Ini" :value="$stats['tugas_hari_ini']" badge="{{ $stats['tugas_hari_ini'] > 0 ? 'Penting' : 'Selesai' }}" />
 </div>
 
 <div class="bg-botanical-800 rounded-2xl p-6 border border-botanical-700/50">
@@ -24,26 +24,24 @@
         <x-slot name="head">
             <th class="px-6 py-4">Tanaman</th>
             <th class="px-6 py-4">Penempatan</th>
-            <th class="px-6 py-4">Suhu Ruang</th>
-            <th class="px-6 py-4">Kondisi</th>
+            <th class="px-6 py-4">Spesies</th>
+            <th class="px-6 py-4">Status</th>
         </x-slot>
         
+        @forelse($pantauanTerbaru as $tanaman)
         <tr class="hover:bg-botanical-700/30 transition border-b border-botanical-700/50">
-            <td class="px-6 py-4 text-white">Monstera King</td>
-            <td class="px-6 py-4 text-gray-400">Ruang Tamu</td>
-            <td class="px-6 py-4 text-gray-400">24°C</td>
+            <td class="px-6 py-4 text-white">{{ $tanaman->nama }}</td>
+            <td class="px-6 py-4 text-gray-400">{{ $tanaman->lokasi->nama ?? 'Belum Diatur' }}</td>
+            <td class="px-6 py-4 text-gray-400">{{ $tanaman->spesies ?? '-' }}</td>
             <td class="px-6 py-4">
-                <span class="text-botanical-accent bg-botanical-accent/10 px-3 py-1 rounded-full text-xs">Terjaga</span>
+                <span class="text-botanical-accent bg-botanical-accent/10 px-3 py-1 rounded-full text-xs">Aktif</span>
             </td>
         </tr>
-        <tr class="hover:bg-botanical-700/30 transition">
-            <td class="px-6 py-4 text-white">Alocasia Black Velvet</td>
-            <td class="px-6 py-4 text-gray-400">Kamar Kerja</td>
-            <td class="px-6 py-4 text-gray-400">26°C</td>
-            <td class="px-6 py-4">
-                <span class="text-botanical-accent bg-botanical-accent/10 px-3 py-1 rounded-full text-xs">Optimal</span>
-            </td>
+        @empty
+        <tr>
+            <td colspan="4" class="px-6 py-10 text-center text-gray-500 italic">Belum ada koleksi tanaman.</td>
         </tr>
+        @endforelse
     </x-table>
 </div>
 @endsection

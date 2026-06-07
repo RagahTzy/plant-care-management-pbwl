@@ -53,7 +53,7 @@
                             <!-- Menampilkan Foto Asli jika ada -->
                             <div class="w-10 h-10 rounded-lg bg-botanical-900 flex items-center justify-center text-xl shadow-inner border border-botanical-700 overflow-hidden">
                                 @if($item->foto)
-                                    <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="w-full h-full object-cover">
+                                    <img src="{{ Storage::disk('supabase')->url($item->foto) }}" alt="{{ $item->nama }}" class="w-full h-full object-cover">
                                 @else
                                     🪴
                                 @endif

@@ -14,7 +14,7 @@ class TanamanController extends Controller
     public function index()
     {
         // Logic Fitur: 
-        // Jika Admin: Lihat semua tanaman
+        // Jika Admin: Lihat semua tanaman, termasuk user dan lokasi
         // Jika User: Hanya lihat tanaman miliknya
         if (auth()->user()->role === 'admin') {
             $tanaman = Tanaman::with(['user', 'lokasi'])->get();
@@ -27,7 +27,12 @@ class TanamanController extends Controller
 
     public function show($id)
     {
-        $tanaman = Tanaman::findOrFail($id);
+        $tanaman = Tanaman::with('lokasi', 'user')->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $tanaman->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki tanaman ini.');
+        }
+
         return view('tanaman.show', compact('tanaman'));
     }
 
@@ -55,8 +60,8 @@ class TanamanController extends Controller
 
         // Proses upload foto jika ada
         if ($request->hasFile('foto')) {
-            // Simpan foto di folder storage/app/public/tanaman
-            $path = $request->file('foto')->store('tanaman', 'public');
+            // Simpan foto di folder tanaman pada disk supabase
+            $path = $request->file('foto')->store('tanaman', 'supabase');
             $data['foto'] = $path;
         }
 
@@ -97,12 +102,12 @@ class TanamanController extends Controller
         // Cek apakah Admin mengupload foto baru
         if ($request->hasFile('foto')) {
             // Hapus foto lama dari storage jika ada, agar storage tidak penuh
-            if ($tanaman->foto && Storage::disk('public')->exists($tanaman->foto)) {
-                Storage::disk('public')->delete($tanaman->foto);
+            if ($tanaman->foto && Storage::disk('supabase')->exists($tanaman->foto)) {
+                Storage::disk('supabase')->delete($tanaman->foto);
             }
             
             // Simpan foto baru
-            $data['foto'] = $request->file('foto')->store('tanaman', 'public');
+            $data['foto'] = $request->file('foto')->store('tanaman', 'supabase');
         }
 
         // Update data ke database
@@ -117,8 +122,8 @@ class TanamanController extends Controller
         $tanaman = Tanaman::findOrFail($id);
         
         // Hapus foto dari storage jika ada
-        if ($tanaman->foto && Storage::disk('public')->exists($tanaman->foto)) {
-            Storage::disk('public')->delete($tanaman->foto);
+        if ($tanaman->foto && Storage::disk('supabase')->exists($tanaman->foto)) {
+            Storage::disk('supabase')->delete($tanaman->foto);
         }
         
         $tanaman->delete();

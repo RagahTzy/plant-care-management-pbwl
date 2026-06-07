@@ -13,7 +13,7 @@
         
         <!-- TOMBOL TAMBAH KHUSUS ADMIN -->
         @if(auth()->user()->role === 'admin')
-            <a href="{{ route('jadwal.create') }}" class="bg-emerald-500 text-black px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-400 transition shadow-[0_10px_20px_rgba(16,185,129,0.2)]">
+            <a href="{{ route('admin.jadwal.create') }}" class="bg-emerald-500 text-black px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-400 transition shadow-[0_10px_20px_rgba(16,185,129,0.2)]">
                 + TAMBAH JADWAL
             </a>
         @endif
@@ -58,8 +58,8 @@
 
                         <!-- HANYA ADMIN YANG BISA EDIT/HAPUS -->
                         @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('jadwal.edit', $j->id) }}" class="text-yellow-500 hover:text-white transition text-xs font-bold">EDIT</a>
-                            <form action="{{ route('jadwal.destroy', $j->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus jadwal?')">
+                            <a href="{{ route('admin.jadwal.edit', $j->id) }}" class="text-yellow-500 hover:text-white transition text-xs font-bold">EDIT</a>
+                            <form action="{{ route('admin.jadwal.destroy', $j->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus jadwal?')">
                                 @csrf @method('DELETE')
                                 <button class="text-red-500 hover:text-white transition text-xs font-bold">HAPUS</button>
                             </form>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6 pb-12">
     <div class="flex items-center gap-4 mb-8">
-        <a href="{{ route('lokasi.index') }}" class="w-10 h-10 flex items-center justify-center rounded-full bg-botanical-800 border border-botanical-700 text-gray-400 hover:text-white transition">
+        <a href="{{ route('admin.lokasi.index') }}" class="w-10 h-10 flex items-center justify-center rounded-full bg-botanical-800 border border-botanical-700 text-gray-400 hover:text-white transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </a>
         <div>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="flex items-center justify-end gap-4 border-t border-botanical-700 pt-6">
-            <a href="{{ route('lokasi.index') }}" class="px-6 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">
+            <a href="{{ route('admin.lokasi.index') }}" class="px-6 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">
                 Batal
             </a>
             <button type="submit" class="px-8 py-3 rounded-xl text-sm font-bold bg-emerald-500 text-[#0B100D] uppercase tracking-widest hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition">

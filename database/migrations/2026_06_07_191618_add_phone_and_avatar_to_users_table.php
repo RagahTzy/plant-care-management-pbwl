@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tips', function (Blueprint $table) {
-            $table->foreignId('tanaman_id')->nullable()->constrained('tanamans')->onDelete('cascade');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('phone')->nullable()->after('email');
+            $table->string('avatar')->nullable()->after('role');
         });
     }
 
@@ -21,9 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tips', function (Blueprint $table) {
-            $table->dropForeign(['tanaman_id']);
-            $table->dropColumn('tanaman_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['phone', 'avatar']);
         });
     }
 };

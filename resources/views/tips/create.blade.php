@@ -11,7 +11,7 @@
         <h2 class="text-3xl text-white font-serif font-light">Tambah Tips Baru</h2>
     </div>
 
-    <form action="{{ route('tips.store') }}" method="POST" class="bg-botanical-800 p-8 rounded-2xl border border-botanical-700/50 space-y-6">
+    <form action="{{ route('admin.tips.store') }}" method="POST" class="bg-botanical-800 p-8 rounded-2xl border border-botanical-700/50 space-y-6">
         @csrf
         <div>
             <label class="block text-sm text-gray-400 mb-2">Target Tanaman</label>

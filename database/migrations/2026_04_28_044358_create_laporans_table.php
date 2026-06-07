@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('laporans', function (Blueprint $table) {
             $table->id();
-            $table->text('catatan');                 // ✅ isi laporan
-            $table->string('foto')->nullable();      // ✅ upload foto (opsional)
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tanaman_id')->constrained('tanamans')->onDelete('cascade');
+            $table->text('catatan');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

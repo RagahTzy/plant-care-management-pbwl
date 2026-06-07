@@ -23,8 +23,11 @@
 
             {{-- MENU LOKASI (Hanya Admin) --}}
             @if(auth()->user()->role === 'admin')
-                <a href="{{ route('lokasi.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('lokasi.*') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
+                <a href="{{ route('admin.lokasi.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('admin.lokasi.*') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
                     <span>📍</span> Manajemen Lokasi
+                </a>
+                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
+                    <span>👥</span> Manajemen User
                 </a>
             @endif
 
@@ -39,12 +42,12 @@
             </a>
 
             {{-- MENU LAPORAN (Pemisahan Fitur) --}}
-            @if(auth()->user()->role === 'admin')
-                <a href="{{ route('admin.laporan.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('admin.laporan.*') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
-                    <span>📈</span> Laporan Pertumbuhan
-                </a>
-            @else
-                <a href="{{ route('user.laporan.create') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('user.laporan.*') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
+            <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('laporan.*') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
+                <span>📈</span> {{ auth()->user()->role === 'admin' ? 'Laporan Pertumbuhan' : 'Riwayat Laporan' }}
+            </a>
+
+            @if(auth()->user()->role === 'user')
+                <a href="{{ route('user.laporan.create') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm rounded-lg {{ request()->routeIs('user.laporan.create') ? 'bg-botanical-700 text-white' : 'text-gray-400 hover:text-white' }}">
                     <span>📸</span> Kirim Laporan
                 </a>
             @endif
