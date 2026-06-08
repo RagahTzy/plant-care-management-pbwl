@@ -1,52 +1,69 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TipsController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TanamanController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\TipsController;
+use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\UserController;
 
-// Halaman Landing Page
 Route::get('/', function () {
-    return redirect()->route('tips.index');
-});
+    return view('welcome');
+})->name('welcome');
 
-// Route Khusus Admin (Dilindungi middleware auth)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        // Mencegah user biasa masuk ke dashboard admin
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
-        }
-        // Memanggil file view admin yang sudah kita buat sebelumnya
-        return view('dashboard.admin'); 
-    })->name('admin.dashboard');
-    
-    // Nanti kamu bisa tambahkan route CRUD Admin lainnya di sini
-});
-
-// Route Khusus User Biasa (Dilindungi middleware auth)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/user/dashboard', function () {
-        // Mencegah admin nyasar ke dashboard user
-        if (auth()->user()->role !== 'user') {
-            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
-        }
-
-        // Karena kamu belum kasih tau view dashboard user-nya apa, 
-        // pastikan path ini sesuai dengan file blade dashboard user kamu ya!
-        return view('user.index'); 
-    })->name('user.dashboard');
-    
-    // Nanti kamu bisa tambahkan route fitur User lainnya di sini
-});
-
-// Route Profile bawaan Breeze (Biarkan saja untuk fitur bawaan, atau modif ke view profil kita nanti)
+// ROUTE AUTHENTICATED UMUM (Admin & User bisa akses)
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Tanaman Routes (Shared - Admin untuk kelola, User untuk lihat)
+    Route::get('/tanaman', [TanamanController::class, 'index'])->name('tanaman.index');
+    Route::get('/tanaman/{tanaman}', [TanamanController::class, 'show'])->name('tanaman.show');
+
+    // Jadwal Routes (Shared - Admin untuk kelola, User untuk lihat)
+    Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+    Route::get('/jadwal/{jadwal}', [JadwalController::class, 'show'])->name('jadwal.show');
+    Route::patch('/jadwal/{id}/selesai', [JadwalController::class, 'markAsDone'])->name('jadwal.selesai');
+
+    // Tips Routes (Shared - Admin untuk kelola, User untuk lihat)
+    Route::get('/tips', [TipsController::class, 'index'])->name('tips.index');
+    Route::get('/tips/{tip}', [TipsController::class, 'show'])->name('tips.show');
+
+    // Laporan Routes (Shared - Admin & User bisa akses, filter logic ada di Controller)
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('laporan.show');
+    Route::get('/laporan/{id}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
+    Route::put('/laporan/{id}', [LaporanController::class, 'update'])->name('laporan.update');
+    Route::delete('/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
 });
 
-// Wajib ada untuk memanggil route Auth dari Breeze (login, register, dll)
+// ROUTE KHUSUS ADMIN
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [UserController::class, 'adminDashboard'])->name('dashboard');
+    
+    Route::resource('users', UserController::class)->except(['show']);
+    Route::resource('lokasi', LokasiController::class)->except(['show']);
+});
+
+// Rute Admin dengan prefix nama 'admin.' agar konsisten
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('tanaman', TanamanController::class)->except(['index', 'show']);
+    Route::resource('jadwal', JadwalController::class)->except(['index', 'show']);
+    Route::resource('tips', TipsController::class)->except(['index', 'show']);
+});
+
+// ROUTE KHUSUS USER
+// Pastikan kamu punya middleware 'user' atau menggunakan logic manual di Controller
+Route::middleware(['auth', 'user'])->prefix('user')->name('user.')->group(function () {
+    Route::get('/dashboard', [UserController::class, 'userDashboard'])->name('dashboard');
+    
+    Route::get('/laporan/create', [LaporanController::class, 'create'])->name('laporan.create');
+    Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+});
+
 require __DIR__.'/auth.php';

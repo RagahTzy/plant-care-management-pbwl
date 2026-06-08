@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('tanamans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+            $table->string('nama');
+            $table->string('spesies')->nullable();
+            $table->foreignId('lokasi_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('foto')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        // Jangan lupa ubah juga yang di sini
+        Schema::dropIfExists('tanamans');
+    }
+};

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tanaman_id')->constrained('tanamans')->onDelete('cascade');
             $table->date('tanggal');              // ✅ tanggal jadwal
             $table->string('aktivitas');          // ✅ kegiatan (siram, pupuk, dll)
             $table->string('status')->default('belum'); // ✅ status selesai/belum

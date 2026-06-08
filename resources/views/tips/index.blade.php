@@ -1,108 +1,59 @@
 @extends('layouts.dashboard')
 
+@section('title', 'Tips Perawatan - Botanical Curator')
+
 @section('content')
-
-<h1 class="text-2xl font-bold text-white mb-6">Tips Perawatan</h1>
-
-<!-- 🔥 CARD STATS -->
-<div class="grid grid-cols-3 gap-4 mb-6">
-
-    <div class="bg-green-700 p-4 rounded-lg text-white">
-        <p>Total Tips</p>
-        <h2 class="text-2xl font-bold">{{ $tips->count() }}</h2>
+<div class="max-w-7xl mx-auto space-y-6 pb-12">
+    <div class="flex justify-between items-end mb-4">
+        <div>
+            <h2 class="text-3xl text-white font-serif font-light">Tips & Panduan Perawatan</h2>
+            <p class="text-gray-400 text-sm">Informasi spesifik untuk menjaga kesehatan setiap spesimen.</p>
+        </div>
+        
+        @if(auth()->user()->role === 'admin')
+            <a href="{{ route('admin.tips.create') }}" class="bg-emerald-500 text-black px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-400 transition shadow-[0_10px_20px_rgba(16,185,129,0.2)]">
+                + TAMBAH TIPS
+            </a>
+        @endif
     </div>
 
-    <div class="bg-green-700 p-4 rounded-lg text-white">
-        <p>Tips Terbaru</p>
-        <h2 class="text-lg font-bold">
-            {{ $tips->first()->judul ?? '-' }}
-        </h2>
+    <div class="bg-botanical-800 rounded-2xl border border-botanical-700/50 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-botanical-900/50 text-gray-400 text-[10px] font-bold uppercase tracking-widest">
+                <tr>
+                    <th class="px-6 py-4">Spesimen Tanaman</th>
+                    <th class="px-6 py-4">Judul Tips</th>
+                    <th class="px-6 py-4 w-1/3">Deskripsi</th>
+                    <th class="px-6 py-4 text-right">Opsi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-botanical-700/50">
+                @forelse($tips as $t)
+                <tr class="hover:bg-white/[0.02] transition">
+                    <td class="px-6 py-4">
+                        <div class="text-white font-medium">{{ optional($t->tanaman)->nama ?? 'Umum' }}</div>
+                        <div class="text-[10px] text-emerald-500 uppercase font-bold">{{ optional(optional($t->tanaman)->user)->name ?? '-' }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-200 font-medium">{{ $t->judul }}</td>
+                    <td class="px-6 py-4 text-gray-400 text-xs leading-relaxed">
+                        {{ \Illuminate\Support\Str::limit($t->deskripsi, 80) }}
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <a href="{{ route('tips.show', $t->id) }}" class="text-emerald-500 hover:text-white transition text-xs font-bold">LIHAT</a>
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.tips.edit', $t->id) }}" class="text-yellow-500 hover:text-white transition text-xs font-bold">EDIT</a>
+                            <form action="{{ route('admin.tips.destroy', $t->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus tips?')">
+                                @csrf @method('DELETE')
+                                <button class="text-red-500 hover:text-white transition text-xs font-bold">HAPUS</button>
+                            </form>
+                        @endif
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="4" class="px-6 py-10 text-center text-gray-500 italic">Belum ada tips.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-
-    <div class="bg-green-700 p-4 rounded-lg text-white">
-        <p>Status</p>
-        <h2 class="text-2xl font-bold">Aktif</h2>
-    </div>
-
 </div>
-
-
-<!-- 📋 TABLE -->
-<div class="bg-green-900 p-5 rounded-lg text-white">
-
-    <div class="flex justify-between mb-3">
-        <h2>Data Tips</h2>
-
-        <a href="{{ route('tips.create') }}" 
-           class="bg-green-500 px-3 py-1 rounded">
-           + Tambah
-        </a>
-    </div>
-
-    <table class="w-full text-sm">
-        <thead>
-            <tr class="border-b border-green-600">
-                <th class="text-left py-2">Judul</th>
-                <th class="text-left">Deskripsi</th>
-                <th class="text-left">Tanggal</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @forelse ($tips as $tip)
-            <tr class="border-b border-green-700">
-
-                <td class="py-2 font-semibold">
-                    {{ $tip->judul }}
-                </td>
-
-                <td>
-                    {{ Str::limit($tip->deskripsi, 50) }}
-                </td>
-
-                <td>
-                    {{ $tip->created_at->format('d M Y') }}
-                </td>
-
-                <td class="space-x-1">
-
-                    <!-- 🔍 Detail -->
-                    <a href="{{ route('tips.show', $tip->id) }}"
-                       class="bg-blue-500 px-2 py-1 rounded text-xs">
-                        Detail
-                    </a>
-
-                    <!-- ✏️ Edit -->
-                    <a href="{{ route('tips.edit', $tip->id) }}"
-                       class="bg-yellow-500 px-2 py-1 rounded text-xs">
-                        Edit
-                    </a>
-
-                    <!-- 🗑️ Delete -->
-                    <form action="{{ route('tips.destroy', $tip->id) }}" 
-                          method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button class="bg-red-600 px-2 py-1 rounded text-xs">
-                            Hapus
-                        </button>
-                    </form>
-
-                </td>
-
-            </tr>
-
-            @empty
-            <tr>
-                <td colspan="4" class="text-center py-4">
-                    Belum ada tips 😢
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-</div>
-
 @endsection
