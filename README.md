@@ -13,16 +13,24 @@ A Laravel-based application for managing plant care schedules, tips, and reporti
 ## Features
 
 ### Role-Based Access
-- **Admin:** Manages users, locations, plants, schedules, and tips. Access to admin dashboard.
-- **User:** Views plants, schedules, tips, and creates/manages personal care reports. Access to user dashboard.
+- **Admin:** Full access to manage the system and monitor data.
+- **User:** Restricted access focused on personal plant care and reporting.
 
-### Core Modules
-- **Authentication:** Secure login/register system.
-- **Plants Management:** CRUD for plant records.
-- **Schedules:** Manage and track plant care activities.
-- **Tips:** Knowledge base for plant care advice.
-- **Reports (Laporan):** User-submitted reports on plant status/care.
-- **Location Management:** Organization of plant locations.
+### Admin Features
+- **Dashboard:** View overall statistics (total plants, schedules, tips, new reports) and latest reports.
+- **User Management:** Create, Read, Update, Delete (CRUD) user accounts.
+- **Plant Management:** CRUD for plant records.
+- **Schedule Management:** CRUD for plant care schedules.
+- **Tips Management:** CRUD for plant care tips.
+- **Location Management:** CRUD for plant locations.
+
+### User Features
+- **Dashboard:** View personal statistics (active plants, today's tasks, report count) and recent plant updates.
+- **Plant Viewing:** Browse plant information.
+- **Schedule Viewing:** View personal plant care schedules and mark tasks as done.
+- **Tips Viewing:** Access plant care knowledge base.
+- **Report Management:** Create new care reports and manage personal reports (view, edit, delete).
+- **Profile Management:** Update profile information and password.
 
 ## Directory Structure
 - `app/`: Controllers, Models, Middleware.
