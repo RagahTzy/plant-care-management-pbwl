@@ -66,4 +66,12 @@ Route::middleware(['auth', 'user'])->prefix('user')->name('user.')->group(functi
     Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
 });
 
+// ROUTE REDIRECT DASHBOARD (Untuk menangani route('dashboard') yang dipanggil di Breeze)
+Route::get('/dashboard', function () {
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('user.dashboard');
+})->middleware(['auth'])->name('dashboard');
+
 require __DIR__.'/auth.php';
