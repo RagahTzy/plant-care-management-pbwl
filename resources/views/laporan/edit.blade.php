@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Edit Laporan Perawatan - Botanical Curator')
+@section('title', 'Edit Laporan Perawatan - Plant Care Management System')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6 pb-12">

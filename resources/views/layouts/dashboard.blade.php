@@ -36,7 +36,7 @@
         <header class="flex justify-between items-center p-6 bg-botanical-900/80 backdrop-blur-md sticky top-0 z-10">
             <div class="flex-1 max-w-xl">
                 <div class="relative">
-                    <input type="text" placeholder="Search conservancy..." class="w-full bg-botanical-800 text-sm text-gray-300 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-botanical-accent border border-botanical-700">
+                    <input type="text" placeholder="Search..." class="w-full bg-botanical-800 text-sm text-gray-300 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-botanical-accent border border-botanical-700">
                     <svg class="w-4 h-4 absolute left-4 top-2.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
             </div>

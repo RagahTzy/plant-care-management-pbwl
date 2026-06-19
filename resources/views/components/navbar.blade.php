@@ -4,7 +4,7 @@
             {{ $section ?? (auth()->user()->role === 'admin' ? 'ADMIN PANEL' : 'USER DASHBOARD') }}
         </span>
         <h1 class="text-2xl font-serif text-white tracking-wide leading-tight">
-            {{ $pageTitle ?? 'Botanical Curator' }}
+            {{ $pageTitle ?? 'Plant Care Management System' }}
         </h1>
     </div>
 

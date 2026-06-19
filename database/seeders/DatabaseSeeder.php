@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         // Akun Admin
         \App\Models\User::create([
             'name' => 'Eleanor Thorne',
-            'email' => 'admin@conservator.com',
+            'email' => 'admin@plantcare.com',
             'password' => bcrypt('password123'),
             'role' => 'admin',
         ]);

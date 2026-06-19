@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Detail Tanaman - Botanical Curator')
+@section('title', 'Detail Tanaman - Plant Care Management System')
 
 @section('content')
 <x-slot name="header">

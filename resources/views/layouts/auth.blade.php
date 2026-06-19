@@ -7,7 +7,7 @@ resources/views/layouts/auth.blade.php
     <div class="grid gap-10 lg:grid-cols-[1.2fr_1fr] items-center max-w-7xl w-full">
         <section class="rounded-[32px] border border-white/10 bg-[#112714]/95 p-8 shadow-[0_32px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <div class="mb-8 space-y-3">
-                <p class="text-sm uppercase tracking-[0.24em] text-[#7fbf96]">Botanical Curator</p>
+                <p class="text-sm uppercase tracking-[0.24em] text-[#7fbf96]">Plant Care Management System</p>
                 <h1 class="text-3xl font-semibold text-white">@yield('title', 'Akses Akun')</h1>
                 <p class="text-sm leading-6 text-[#b5d6b5]">Masuk untuk mengelola tanaman, jadwal, tips, dan laporan perawatan.</p>
             </div>
